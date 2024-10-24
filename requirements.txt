@@ -1,6 +1,4 @@
 flask
-pickle
 pandas
 psycopg2
-os
-dotenv
+python-dotenv
