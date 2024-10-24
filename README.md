@@ -50,7 +50,7 @@ Observação: Scripts SQL estão nesse repositório: https://github.com/Let-s-Sn
 ### Outras Ferramentas
 
 - Git
-- Render
+- EC2 AWS
 
 ## Autores
 
