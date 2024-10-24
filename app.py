@@ -71,9 +71,10 @@ def getResponse():
         disconnect(cnxn)
 
         return jsonify({'response': response}), 200
-    except:
+    except Exception as ex:
+        print(ex)
         return jsonify({'error': 'error'}), 500
     
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True, host='0.0.0.0', port=8080)
