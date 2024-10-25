@@ -2,37 +2,34 @@ name: Pipeline - RPA
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
-
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.12"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    
-    #- name: Teste 
-    #  run: coverage run app_test.py
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    #- name: Relatorio do teste
-    #  run: coverage report -m
-          
-    - name: Deploy no EC2 - AWS
-      run: |
-            echo "Conectando no EC2"
-            echo "${{secrets.AWS_KEY}" > private_key && chmod 600 private_key
-            ssh -o StrictHostKeyChecking=no -i private_key ubuntu@ec2-54-205-13-96.compute-1.amazonaws.com "
-                  cd Backend-IA/;git pull;./iniciar.sh"
+      - name: Test with coverage
+        run: coverage run app_test.py
+
+      - name: Test Report
+        run: coverage report -m
+
+      - name: Deploy on EC2 - AWS
+        run: |
+          echo "Connecting on EC2"
+          echo "${{secrets.AWS_KEY}" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@ec2-54-205-13-96.compute-1.amazonaws.com "
+                cd Backend-IA/;git pull;./iniciar.sh"
