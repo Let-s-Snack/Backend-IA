@@ -39,7 +39,7 @@ jobs:
 
       - name: Deploy on EC2 - AWS
         env:
-          AWS_KEY: ${{ secrets.AWS_PEM }}
+          AWS_PEM: ${{ secrets.AWS_PEM }}
         run: |
           echo "Connecting  EC2"
           echo "$AWS_PEM" > private_key && chmod 600 private_key
