@@ -10,7 +10,7 @@ class TestConnections(unittest.TestCase):
         try:
             cnxn = psycopg2.connect(
                 host=os.getenv('DB_HOST'),
-                database=os.getenv('DB_DATABASE1'),
+                database=os.getenv('DB_DATABASE'),
                 user=os.getenv('DB_USER'),
                 password=os.getenv('DB_PWD'),
                 port=os.getenv('DB_PORT')

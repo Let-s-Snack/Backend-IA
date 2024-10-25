@@ -1,10 +1,14 @@
-name: Pipeline - RPA
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+name: BackEnd - IA
 
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -22,14 +26,23 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Test with coverage
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PWD: ${{ secrets.DB_PWD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
         run: coverage run app_test.py
 
-      - name: Test Report
-        run: coverage report -m
+      - name: Result
+        run: coverage report
 
       - name: Deploy on EC2 - AWS
+        env:
+          AWS_KEY: ${{ secrets.AWS_PEM }}
         run: |
-          echo "Connecting on EC2"
-          echo "${{secrets.AWS_KEY}" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@ec2-54-205-13-96.compute-1.amazonaws.com "
-                cd Backend-IA/;git pull;./iniciar.sh"
+          echo "Connecting  EC2"
+          echo "$AWS_PEM" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@ec2-54-175-111-241.compute-1.amazonaws.com "
+          cd Backend-IA/; git pull; ./iniciar.sh"
