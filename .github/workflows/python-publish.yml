@@ -31,7 +31,6 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PWD: ${{ secrets.DB_PWD }}
           DB_PORT: ${{ secrets.DB_PORT }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
         run: coverage run app_test.py
 
@@ -40,7 +39,7 @@ jobs:
 
       - name: Deploy on EC2 - AWS
         env:
-          AWS_KEY: ${{ secrets.AWS_PEM }}
+          AWS_PEM: ${{ secrets.AWS_PEM }}
         run: |
           echo "Connecting  EC2"
           echo "$AWS_PEM" > private_key && chmod 600 private_key
