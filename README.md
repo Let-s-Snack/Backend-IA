@@ -15,7 +15,12 @@ Segue a documentação das rotas do projeto:
 
 - Método: POST;
 - Função: Classificar o usuário como: True ou False;
-- Campos Obrigatórios (body): email, weight e height;
+- Campos Obrigatórios (body):
+  {
+  email: string,
+  weight: float,
+  height: float
+  };
 - Retorno: { "response": bool }.
 
 ## Dependências
