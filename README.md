@@ -11,12 +11,12 @@ O objetivo é consumir um modelo de Machine Learning para prever se um usuário 
 
 Segue a documentação das rotas do projeto:
 
-### Rota: /getResponse/
+### Rota: [/getResponse/](http://ec2-54-175-111-241.compute-1.amazonaws.com:8080/getResponse/)
 
 - Método: POST;
 - Função: Classificar o usuário como: True ou False;
 - Campos Obrigatórios (body): email, weight e height;
-- Retorno: { "response": true }.
+- Retorno: { "response": bool }.
 
 ## Dependências
 
