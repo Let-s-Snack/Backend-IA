@@ -9,19 +9,24 @@ O objetivo é consumir um modelo de Machine Learning para prever se um usuário 
 
 ## Rotas
 
-Segue a documentação das rotas do projeto:
-
 ### EndPoint: http://ec2-54-175-111-241.compute-1.amazonaws.com:8080/getResponse/
 
-- Método: POST;
-- Função: Classificar o usuário como: True ou False;
-- Campos Obrigatórios (body):
-  {
-  email: string,
-  weight: float,
-  height: float
-  };
-- Retorno: { "response": bool }.
+- **Método**: `POST`
+- **Função**: Classificar o usuário como um possível usuário: `True` ou `False`.
+- **Retorno:** { "response": bool }.
+- **Campos Obrigatórios** (Body):
+
+```json
+{
+  "email": "string", // Email do usuário.
+  "weight": "float", // Peso do usuário em quilogramas.
+  "height": "float", // Altura do usuário em metros.
+  "exercise": "int", // Frequência de atividades físicas nos últimos 7 dias (1 a 40).
+  "self": "int", // Autoavaliação da saúde física (1 a 5, onde 1 é Excelente e 5 é Ruim).
+  "fast_food": "int", // Frequência de compras de fast food nos últimos 7 dias (1 a 30).
+  "soda": "int" // Tipo de refrigerante consumido (0 para "Não consome", 1 para "Diet", 2 para "Normal", 3 para "Ambos").
+}
+```
 
 ## Dependências
 
