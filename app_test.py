@@ -40,9 +40,10 @@ def getResponse(body):
                 missingCols.append(i) 
         
         if len(missingCols) > 0:
-            return f'ERROR - missing required columns: {missingCols}'
+            return {'error': f'ERROR - missing required columns: {missingCols}'}
 
-        model_obesity = pickle.load(open('model_obesity.pkl','rb'))
+        with open('model_obesity.pkl', 'rb') as f:
+            model_obesity = pickle.load(f)
         
         vals = [body['height'], body['weight']]
         cols = ['Height', 'Weight']
@@ -54,8 +55,8 @@ def getResponse(body):
         data = pd.DataFrame([test])
         response_obesity = model_obesity.predict(data)[0]
         
-        
-        model_habits = pickle.load(open('model_habits.pkl','rb'))
+        with open('model_habits.pkl', 'rb') as f:
+            model_habits = pickle.load(f)
         
         vals = [body['exercise'], body['self'], body['fast_food'], body['soda'], body['weight'], body['height']]
         cols = ['euexfreq', 'eugenhth', 'eufastfdfrq', 'eudietsoda', 'euwgt', 'euhgt']
