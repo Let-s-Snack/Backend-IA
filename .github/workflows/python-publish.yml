@@ -2,10 +2,7 @@ name: BackEnd - IA
 
 on:
   push:
-    branches: ["main"]
-  push:
-    branches: ["develop"]
-
+    branches: ["main","develop"]
 
 permissions:
   contents: read
