@@ -40,7 +40,7 @@ def getResponse(body):
                 missingCols.append(i) 
         
         if len(missingCols) > 0:
-            return f'ERROR - missing required columns: {missingCols}', 400
+            return f'ERROR - missing required columns: {missingCols}'
 
         model_obesity = pickle.load(open('model_obesity.pkl','rb'))
         
@@ -127,7 +127,7 @@ class TestConnections(unittest.TestCase):
             "score": -4
         }) 
         
-    def test_post_missing_columns(self):
+    def test_post_invalid_weight_type(self):
         body = {
             "weight": "WEIGHT",
             "height": 1.68,
@@ -143,7 +143,7 @@ class TestConnections(unittest.TestCase):
             "error": "error"
         })  
         
-    def test_post_missing_columns(self):
+    def test_post_missing_required_columns(self):
         body = {
             "weight": 120,
             "height": 1.68,
@@ -154,5 +154,6 @@ class TestConnections(unittest.TestCase):
         self.assertEqual(response, {
             "error": "ERROR - missing required columns: ['soda', 'fast_food', 'self', 'exercise']"
         })  
+
 if __name__ == "__main__":
     unittest.main()
