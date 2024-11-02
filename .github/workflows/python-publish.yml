@@ -2,7 +2,7 @@ name: BackEnd - IA
 
 on:
   push:
-    branches: ["main","develop"]
+    branches: ["main", "develop"]
 
 permissions:
   contents: read
@@ -13,10 +13,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v3
         with:
           python-version: "3.12"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -38,7 +48,7 @@ jobs:
         env:
           AWS_PEM: ${{ secrets.AWS_PEM }}
         run: |
-          echo "Connecting  EC2"
+          echo "Connecting to EC2"
           echo "$AWS_PEM" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ubuntu@ec2-54-175-111-241.compute-1.amazonaws.com "
           cd Backend-IA/; git pull; ./iniciar.sh"
