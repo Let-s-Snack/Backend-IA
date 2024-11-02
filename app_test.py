@@ -76,6 +76,7 @@ def getResponse(body):
             }
 
     except Exception as ex:
+        print(ex)
         return {'error': 'error'}
 
 class TestConnections(unittest.TestCase):
