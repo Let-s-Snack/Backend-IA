@@ -28,6 +28,30 @@ def disconnect(cnxn):
     if cnxn:
         cnxn.close()
 
+def calculate_possible_user(response_obesity, response_habits):
+    weight_obesity = {
+        "Insufficient Weight": 2,
+        "Normal Weight": 3,
+        "Overweight Level I": 1,
+        "Overweight Level II": -1,
+        "Obesity Type I": -2,
+        "Obesity Type II": -3,
+        "Obesity Type III": -4
+    }
+ 
+    weight_habits = {
+        1: 4,
+        4: 1,
+        2: 0,
+        3: -4,
+        0: -4  
+    }
+ 
+    score = weight_obesity.get(response_obesity, 0) + weight_habits.get(response_habits, 0)
+    is_possible_user = score >= 0
+   
+    return is_possible_user, score
+
 
 @app.route('/getResponse/', methods=['POST'])
 def getResponse():
@@ -35,44 +59,62 @@ def getResponse():
         body = request.get_json()
 
         missingCols = []
-        if 'weight' not in body.keys():
-            missingCols.append('weight') 
-        if 'height' not in body.keys():
-            missingCols.append('height')
-        if 'email' not in body.keys():
-            missingCols.append('email') 
-
+        requiredColumns = ['weight', 'height', 'email', 'soda', 'fast_food', 'self', 'exercise']
+        for i in requiredColumns:
+            if i not in body.keys():
+                missingCols.append(i) 
+        
         if len(missingCols) > 0:
-            return f'ERROR - missing required columns: {missingCols}', 400
+            return jsonify({'error':f'ERROR - missing required columns: {missingCols}'}), 400
 
-        # model = pickle.load(open('model.pkl','rb'))
-        # preprocessor = pickle.load(open('label-encoder.pkl','rb'))
+        model_obesity = pickle.load(open('model_obesity.pkl','rb'))
         
-        # vals = [body['height'], body['weight']]
-        # cols = preprocessor.transformers_[0][2]
+        vals = [body['height'], body['weight']]
+        cols = ['Height', 'Weight']
         
-        # test = {}
-        # for i in range(0,len(vals)):
-        #     test[cols[i]] = vals[i]
+        test = {}
+        for i in range(0,len(vals)):
+            test[cols[i]] = vals[i]
         
-        # test = pd.DataFrame([test])
-        # data = preprocessor.transform(test)
+        data = pd.DataFrame([test])
+        response_obesity = model_obesity.predict(data)[0]
         
-        # response = model.predict(data)[0]
-        response = True
+        
+        model_habits = pickle.load(open('model_habits.pkl','rb'))
+        
+        vals = [body['exercise'], body['self'], body['fast_food'], body['soda'], body['weight'], body['height']]
+        cols = ['euexfreq', 'eugenhth', 'eufastfdfrq', 'eudietsoda', 'euwgt', 'euhgt']
+        
+        test = {}
+        for i in range(0,len(vals)):
+            test[cols[i]] = vals[i]
+        
+        test = pd.DataFrame([test])
+        response_habits = int(model_habits.predict(test)[0])
+        
+        is_possible_user = calculate_possible_user(response_obesity, response_habits)
         
         cnxn = connect()
         cursor = cnxn.cursor()
         
-        cursor.execute(f"INSERT INTO let_ia_responses(email, weight, height, response) VALUES ('{body['email']}', {float(body['weight'])}, {float(body['height'])}, {response})")
-         
+        cursor.execute(f"INSERT INTO let_ia_responses(email, weight, height, exercise, self, fast_food, soda, response_obesity, response_habits, is_possible_user, score) VALUES ('{body['email']}', {float(body['weight'])}, {float(body['height'])}, {int(body['exercise'])}, {int(body['self'])}, {int(body['fast_food'])}, {int(body['soda'])},'{str(response_obesity)}', {response_habits}, {is_possible_user[0]}, {is_possible_user[1]})")
+
         cnxn.commit()
         cursor.close()
         disconnect(cnxn)
 
-        return jsonify({'response': response}), 200
+        return jsonify(
+            {
+                'is_possible_user': is_possible_user[0],
+                'score': is_possible_user[1]
+            }
+        ), 200
+        
     except Exception as ex:
-        print(ex)
+        try:
+            disconnect(cnxn)
+        except:
+            pass
         return jsonify({'error': 'error'}), 500
     
 
