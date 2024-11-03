@@ -67,6 +67,8 @@ def getResponse():
         if len(missingCols) > 0:
             return jsonify({'error':f'ERROR - missing required columns: {missingCols}'}), 400
 
+        body['self'] = 6 - body['self']
+         
         model_obesity = pickle.load(open('model_obesity.pkl','rb'))
         
         vals = [body['height'], body['weight']]
