@@ -51,5 +51,5 @@ jobs:
         run: |
           echo "Connecting to EC2"
           echo "$AWS_PEM" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@ec2-54-175-111-241.compute-1.amazonaws.com "
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@ec2-44-217-227-243.compute-1.amazonaws.com "
           cd Backend-IA/; git pull; ./iniciar.sh"
