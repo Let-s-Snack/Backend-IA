@@ -39,7 +39,7 @@ Os clusters e scores para o perfil de hábitos estão listados abaixo:
 
 ### Classificação de Usuário
 
-**URL**: `http://ec2-54-175-111-241.compute-1.amazonaws.com:8080/getResponse/`
+**URL**: `http://ec2-44-217-227-243.compute-1.amazonaws.com:8080/getResponse/`
 
 **Método**: `POST`
 
